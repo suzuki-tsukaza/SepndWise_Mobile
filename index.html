@@ -1,0 +1,2637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color"
+      content="#5B67F1">
+
+<link rel="manifest"
+      href="manifest.json">
+
+<title>SpendWise</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #F6F7FB;
+    color: #20242D;
+    min-height: 100vh;
+}
+
+.app {
+    max-width: 600px;
+    margin: auto;
+    padding-bottom: 85px;
+}
+
+.header {
+    background: #1F2430;
+    color: white;
+    padding: 22px 20px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.subtitle {
+    color: #AEB3C0;
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.page {
+    display: none;
+    padding: 20px;
+}
+
+.page.active {
+    display: block;
+}
+
+.page-title {
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.page-subtitle {
+    color: #7A8190;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.card {
+    background: white;
+    border: 1px solid #E3E6ED;
+    border-radius: 14px;
+    padding: 17px;
+    margin-bottom: 15px;
+}
+
+.stat-title {
+    color: #7A8190;
+    font-size: 11px;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+.stat-value {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.section-title {
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 13px;
+}
+
+button {
+    border: none;
+    border-radius: 10px;
+    padding: 13px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.primary {
+    background: #5B67F1;
+    color: white;
+}
+
+.secondary {
+    background: #EEF0FF;
+    color: #5B67F1;
+}
+
+.danger {
+    background: #FDEDEE;
+    color: #C6434B;
+}
+
+.full {
+    width: 100%;
+}
+
+.action-row {
+    display: flex;
+    gap: 10px;
+}
+
+.action-row button {
+    flex: 1;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #D9DDE6;
+    border-radius: 9px;
+    background: white;
+    font-size: 15px;
+    outline: none;
+}
+
+input:focus,
+select:focus {
+    border-color: #5B67F1;
+}
+
+.expense-item {
+    border-bottom: 1px solid #ECEEF3;
+    padding: 14px 0;
+}
+
+.expense-item:last-child {
+    border-bottom: none;
+}
+
+.expense-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.expense-description {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.expense-amount {
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.expense-details {
+    color: #7A8190;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.expense-actions {
+    display: flex;
+    gap: 7px;
+    margin-top: 10px;
+}
+
+.small-button {
+    padding: 8px 11px;
+    font-size: 12px;
+}
+
+.empty {
+    text-align: center;
+    color: #7A8190;
+    padding: 25px 5px;
+}
+
+.progress-background {
+    height: 12px;
+    background: #E9EBF2;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.progress {
+    height: 100%;
+    background: #5B67F1;
+    width: 0%;
+    transition: width 0.3s;
+}
+
+.category-row {
+    margin-bottom: 16px;
+}
+
+.category-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.category-bar-bg {
+    height: 9px;
+    background: #E9EBF2;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.category-bar {
+    height: 100%;
+    background: #5B67F1;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid #E3E6ED;
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 4px;
+    z-index: 10;
+}
+
+.nav-button {
+    background: transparent;
+    color: #7A8190;
+    padding: 7px 4px;
+    font-size: 11px;
+    border-radius: 8px;
+}
+
+.nav-button.active {
+    color: #5B67F1;
+    background: #EEF0FF;
+}
+
+.nav-icon {
+    display: block;
+    font-size: 18px;
+    margin-bottom: 2px;
+}
+
+.search-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.search-row input {
+    flex: 1;
+}
+
+.search-row select {
+    width: 145px;
+}
+
+.over-budget {
+    color: #C6434B;
+}
+
+.within-budget {
+    color: #3D815A;
+}
+
+.export-button {
+    margin-top: 10px;
+}
+
+@media (max-width: 450px) {
+
+    .action-row {
+        flex-direction: column;
+    }
+
+    .search-row {
+        flex-direction: column;
+    }
+
+    .search-row select {
+        width: 100%;
+    }
+}
+
+@media (min-width: 601px) {
+
+    body {
+        padding-bottom: 0;
+    }
+
+    .bottom-nav {
+        max-width: 600px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header class="header">
+
+    <div class="logo">
+        SpendWise
+    </div>
+
+    <div class="subtitle">
+        Personal Expense Tracker
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
+
+<section id="dashboard" class="page active">
+
+    <div class="page-title">
+        Dashboard
+    </div>
+
+    <div class="page-subtitle">
+        A quick overview of your spending
+    </div>
+
+
+    <div class="stats">
+
+        <div class="card">
+
+            <div class="stat-title">
+                TOTAL SPENT
+            </div>
+
+            <div
+                class="stat-value"
+                id="dashboardTotal"
+            >
+                ₹ 0.00
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="stat-title">
+                EXPENSES
+            </div>
+
+            <div
+                class="stat-value"
+                id="dashboardCount"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="stat-title">
+                BUDGET
+            </div>
+
+            <div
+                class="stat-value"
+                id="dashboardBudget"
+            >
+                ₹ 0.00
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="stat-title">
+                REMAINING
+            </div>
+
+            <div
+                class="stat-value"
+                id="dashboardRemaining"
+            >
+                ₹ 0.00
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="section-title">
+            Quick Actions
+        </div>
+
+
+        <div class="action-row">
+
+            <button
+                class="primary"
+                onclick="showPage('add')"
+            >
+                ＋ Add Expense
+            </button>
+
+
+            <button
+                class="secondary"
+                onclick="showPage('budget')"
+            >
+                💰 Budget
+            </button>
+
+        </div>
+
+
+        <button
+            class="secondary full export-button"
+            onclick="exportReport()"
+        >
+            📄 Export Report
+        </button>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="section-title">
+            Recent Expenses
+        </div>
+
+        <div id="recentExpenses"></div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     ADD EXPENSE
+===================================================== -->
+
+<section id="add" class="page">
+
+    <div
+        class="page-title"
+        id="formTitle"
+    >
+        Add Expense
+    </div>
+
+    <div class="page-subtitle">
+        Record a new expense in SpendWise
+    </div>
+
+
+    <div class="card">
+
+        <form id="expenseForm">
+
+            <div class="form-group">
+
+                <label>
+                    Amount (₹)
+                </label>
+
+                <input
+                    type="number"
+                    id="amount"
+                    min="0.01"
+                    step="0.01"
+                    placeholder="Enter amount"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Category
+                </label>
+
+                <select id="category">
+
+                    <option>Food</option>
+                    <option>Travel</option>
+                    <option>Shopping</option>
+                    <option>Stationery</option>
+                    <option>Entertainment</option>
+                    <option>Other</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Date
+                </label>
+
+                <input
+                    type="date"
+                    id="date"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Description
+                </label>
+
+                <input
+                    type="text"
+                    id="description"
+                    placeholder="What did you spend on?"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Payment Method
+                </label>
+
+                <select id="payment">
+
+                    <option>Cash</option>
+                    <option>UPI</option>
+                    <option>Card</option>
+                    <option>Other</option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="primary full"
+                id="saveButton"
+            >
+                Save Expense
+            </button>
+
+
+            <button
+                type="button"
+                class="secondary full"
+                id="cancelEditButton"
+                onclick="cancelEdit()"
+                style="display:none; margin-top:10px;"
+            >
+                Cancel
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     HISTORY
+===================================================== -->
+
+<section id="history" class="page">
+
+    <div class="page-title">
+        Expense History
+    </div>
+
+    <div class="page-subtitle">
+        Search, filter, edit or delete your expenses
+    </div>
+
+
+    <div class="search-row">
+
+        <input
+            type="search"
+            id="search"
+            placeholder="Search expenses..."
+            oninput="renderHistory()"
+        >
+
+
+        <select
+            id="filterCategory"
+            onchange="renderHistory()"
+        >
+
+            <option>
+                All Categories
+            </option>
+
+            <option>Food</option>
+            <option>Travel</option>
+            <option>Shopping</option>
+            <option>Stationery</option>
+            <option>Entertainment</option>
+            <option>Other</option>
+
+        </select>
+
+    </div>
+
+
+    <div class="card">
+
+        <div id="historyList"></div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     ANALYSIS
+===================================================== -->
+
+<section id="analysis" class="page">
+
+    <div class="page-title">
+        Analysis
+    </div>
+
+    <div class="page-subtitle">
+        Understand where your money is going
+    </div>
+
+
+    <div class="stats">
+
+        <div class="card">
+
+            <div class="stat-title">
+                TOTAL SPENT
+            </div>
+
+            <div
+                class="stat-value"
+                id="analysisTotal"
+            >
+                ₹ 0.00
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="stat-title">
+                AVERAGE EXPENSE
+            </div>
+
+            <div
+                class="stat-value"
+                id="analysisAverage"
+            >
+                ₹ 0.00
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="stat-title">
+                LARGEST EXPENSE
+            </div>
+
+            <div
+                class="stat-value"
+                id="analysisLargest"
+            >
+                ₹ 0.00
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="section-title">
+            Category Breakdown
+        </div>
+
+        <div id="categoryBreakdown"></div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="section-title">
+            Insights
+        </div>
+
+        <div id="insights"></div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     BUDGET
+===================================================== -->
+
+<section id="budget" class="page">
+
+    <div class="page-title">
+        Budget
+    </div>
+
+    <div class="page-subtitle">
+        Set a spending limit and monitor your remaining amount
+    </div>
+
+
+    <div class="card">
+
+        <div class="section-title">
+            Monthly Budget
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Budget Amount (₹)
+            </label>
+
+            <input
+                type="number"
+                id="budgetInput"
+                min="0"
+                step="0.01"
+                placeholder="Enter budget"
+            >
+
+        </div>
+
+
+        <button
+            class="primary full"
+            onclick="saveBudget()"
+        >
+            Save Budget
+        </button>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="section-title">
+            Budget Summary
+        </div>
+
+
+        <p>
+
+            Budget:
+
+            <strong id="summaryBudget">
+                ₹ 0.00
+            </strong>
+
+        </p>
+
+
+        <p style="margin-top:8px;">
+
+            Spent:
+
+            <strong id="summarySpent">
+                ₹ 0.00
+            </strong>
+
+        </p>
+
+
+        <p style="margin-top:8px;">
+
+            Remaining:
+
+            <strong id="summaryRemaining">
+                ₹ 0.00
+            </strong>
+
+        </p>
+
+
+        <div class="progress-background">
+
+            <div
+                class="progress"
+                id="budgetProgress"
+            ></div>
+
+        </div>
+
+
+        <p
+            id="budgetStatus"
+            style="
+                margin-top:10px;
+                font-size:13px;
+                font-weight:bold;
+            "
+        ></p>
+
+    </div>
+
+</section>
+
+</div>
+
+
+
+<!-- =====================================================
+     BOTTOM NAVIGATION
+===================================================== -->
+
+<nav class="bottom-nav">
+
+    <button
+        class="nav-button active"
+        data-page="dashboard"
+        onclick="showPage('dashboard')"
+    >
+
+        <span class="nav-icon">
+            ⌂
+        </span>
+
+        Home
+
+    </button>
+
+
+    <button
+        class="nav-button"
+        data-page="add"
+        onclick="startNewExpense()"
+    >
+
+        <span class="nav-icon">
+            ＋
+        </span>
+
+        Add
+
+    </button>
+
+
+    <button
+        class="nav-button"
+        data-page="history"
+        onclick="showPage('history')"
+    >
+
+        <span class="nav-icon">
+            ▤
+        </span>
+
+        History
+
+    </button>
+
+
+    <button
+        class="nav-button"
+        data-page="analysis"
+        onclick="showPage('analysis')"
+    >
+
+        <span class="nav-icon">
+            ▣
+        </span>
+
+        Analysis
+
+    </button>
+
+
+    <button
+        class="nav-button"
+        data-page="budget"
+        onclick="showPage('budget')"
+    >
+
+        <span class="nav-icon">
+            ◉
+        </span>
+
+        Budget
+
+    </button>
+
+</nav>
+
+
+
+<script>
+
+/* =========================================================
+   DATA
+========================================================= */
+
+let expenses = JSON.parse(
+    localStorage.getItem(
+        "spendwise_expenses"
+    ) || "[]"
+);
+
+
+let budget = parseFloat(
+    localStorage.getItem(
+        "spendwise_budget"
+    ) || "0"
+);
+
+
+let editingIndex = null;
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function formatMoney(amount) {
+
+    return "₹ " +
+        Number(amount).toLocaleString(
+            "en-IN",
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }
+        );
+
+}
+
+
+function saveData() {
+
+    localStorage.setItem(
+        "spendwise_expenses",
+        JSON.stringify(expenses)
+    );
+
+
+    localStorage.setItem(
+        "spendwise_budget",
+        budget.toString()
+    );
+
+}
+
+
+function calculateTotal() {
+
+    return expenses.reduce(
+        (total, item) =>
+            total + Number(item.amount),
+        0
+    );
+
+}
+
+
+function getCategoryTotals() {
+
+    const totals = {};
+
+
+    expenses.forEach(item => {
+
+        if (!totals[item.category]) {
+
+            totals[item.category] = 0;
+
+        }
+
+
+        totals[item.category] +=
+            Number(item.amount);
+
+    });
+
+
+    return totals;
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function showPage(pageName) {
+
+    document.querySelectorAll(
+        ".page"
+    ).forEach(page => {
+
+        page.classList.remove(
+            "active"
+        );
+
+    });
+
+
+    document.getElementById(
+        pageName
+    ).classList.add(
+        "active"
+    );
+
+
+    document.querySelectorAll(
+        ".nav-button"
+    ).forEach(button => {
+
+        button.classList.remove(
+            "active"
+        );
+
+
+        if (
+            button.dataset.page ===
+            pageName
+        ) {
+
+            button.classList.add(
+                "active"
+            );
+
+        }
+
+    });
+
+
+    if (pageName === "dashboard") {
+
+        renderDashboard();
+
+    }
+
+
+    if (pageName === "history") {
+
+        renderHistory();
+
+    }
+
+
+    if (pageName === "analysis") {
+
+        renderAnalysis();
+
+    }
+
+
+    if (pageName === "budget") {
+
+        renderBudget();
+
+    }
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function renderDashboard() {
+
+    const total =
+        calculateTotal();
+
+
+    const remaining =
+        budget - total;
+
+
+    document.getElementById(
+        "dashboardTotal"
+    ).textContent =
+        formatMoney(total);
+
+
+    document.getElementById(
+        "dashboardCount"
+    ).textContent =
+        expenses.length;
+
+
+    document.getElementById(
+        "dashboardBudget"
+    ).textContent =
+        formatMoney(budget);
+
+
+    document.getElementById(
+        "dashboardRemaining"
+    ).textContent =
+        formatMoney(remaining);
+
+
+    const recentContainer =
+        document.getElementById(
+            "recentExpenses"
+        );
+
+
+    if (expenses.length === 0) {
+
+        recentContainer.innerHTML =
+            '<div class="empty">No expenses added yet.</div>';
+
+        return;
+
+    }
+
+
+    const recent =
+        expenses
+        .slice(-5)
+        .reverse();
+
+
+    recentContainer.innerHTML =
+        recent.map(item => {
+
+            return `
+
+                <div class="expense-item">
+
+                    <div class="expense-top">
+
+                        <div>
+
+                            <div class="expense-description">
+
+                                ${escapeHtml(
+                                    item.description
+                                )}
+
+                            </div>
+
+
+                            <div class="expense-details">
+
+                                ${escapeHtml(
+                                    item.category
+                                )}
+
+                                •
+
+                                ${escapeHtml(
+                                    item.date
+                                )}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="expense-amount">
+
+                            ${formatMoney(
+                                item.amount
+                            )}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =========================================================
+   ADD / EDIT EXPENSE
+========================================================= */
+
+function startNewExpense() {
+
+    editingIndex = null;
+
+
+    document.getElementById(
+        "formTitle"
+    ).textContent =
+        "Add Expense";
+
+
+    document.getElementById(
+        "saveButton"
+    ).textContent =
+        "Save Expense";
+
+
+    document.getElementById(
+        "cancelEditButton"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "expenseForm"
+    ).reset();
+
+
+    setToday();
+
+
+    showPage("add");
+
+}
+
+
+function setToday() {
+
+    const today =
+        new Date();
+
+
+    const year =
+        today.getFullYear();
+
+
+    const month =
+        String(
+            today.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    const day =
+        String(
+            today.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    document.getElementById(
+        "date"
+    ).value =
+        `${year}-${month}-${day}`;
+
+}
+
+
+document.getElementById(
+    "expenseForm"
+).addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+
+        const amount =
+            parseFloat(
+                document.getElementById(
+                    "amount"
+                ).value
+            );
+
+
+        const category =
+            document.getElementById(
+                "category"
+            ).value;
+
+
+        const date =
+            document.getElementById(
+                "date"
+            ).value;
+
+
+        const description =
+            document.getElementById(
+                "description"
+            ).value.trim();
+
+
+        const payment =
+            document.getElementById(
+                "payment"
+            ).value;
+
+
+        if (
+            !amount ||
+            amount <= 0
+        ) {
+
+            alert(
+                "Amount must be greater than 0."
+            );
+
+            return;
+
+        }
+
+
+        if (!date) {
+
+            alert(
+                "Please select a date."
+            );
+
+            return;
+
+        }
+
+
+        const selectedDate =
+            new Date(
+                date +
+                "T00:00:00"
+            );
+
+
+        const today =
+            new Date();
+
+
+        today.setHours(
+            0,
+            0,
+            0,
+            0
+        );
+
+
+        if (
+            selectedDate >
+            today
+        ) {
+
+            alert(
+                "Future dates are not allowed."
+            );
+
+            return;
+
+        }
+
+
+        if (!description) {
+
+            alert(
+                "Please enter a description."
+            );
+
+            return;
+
+        }
+
+
+        const expense = {
+
+            amount: amount,
+
+            category: category,
+
+            date: formatDate(date),
+
+            description: description,
+
+            payment: payment
+
+        };
+
+
+        if (
+            editingIndex ===
+            null
+        ) {
+
+            expenses.push(
+                expense
+            );
+
+
+            alert(
+                "Expense added successfully!"
+            );
+
+        } else {
+
+            expenses[
+                editingIndex
+            ] = expense;
+
+
+            alert(
+                "Expense updated successfully!"
+            );
+
+        }
+
+
+        saveData();
+
+
+        startNewExpense();
+
+
+        showPage(
+            "dashboard"
+        );
+
+    }
+);
+
+
+function formatDate(
+    dateString
+) {
+
+    const parts =
+        dateString.split("-");
+
+
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+
+}
+
+
+function editExpense(index) {
+
+    const item =
+        expenses[index];
+
+
+    editingIndex =
+        index;
+
+
+    document.getElementById(
+        "formTitle"
+    ).textContent =
+        "Edit Expense";
+
+
+    document.getElementById(
+        "saveButton"
+    ).textContent =
+        "Update Expense";
+
+
+    document.getElementById(
+        "cancelEditButton"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "amount"
+    ).value =
+        item.amount;
+
+
+    document.getElementById(
+        "category"
+    ).value =
+        item.category;
+
+
+    document.getElementById(
+        "date"
+    ).value =
+        convertToInputDate(
+            item.date
+        );
+
+
+    document.getElementById(
+        "description"
+    ).value =
+        item.description;
+
+
+    document.getElementById(
+        "payment"
+    ).value =
+        item.payment;
+
+
+    showPage("add");
+
+}
+
+
+function convertToInputDate(
+    dateString
+) {
+
+    const parts =
+        dateString.split("/");
+
+
+    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+
+}
+
+
+function cancelEdit() {
+
+    startNewExpense();
+
+    showPage("history");
+
+}
+
+
+function deleteExpense(index) {
+
+    const description =
+        expenses[index]
+            .description;
+
+
+    const confirmed =
+        confirm(
+            `Delete "${description}"?`
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    expenses.splice(
+        index,
+        1
+    );
+
+
+    saveData();
+
+
+    renderHistory();
+
+    renderDashboard();
+
+    renderAnalysis();
+
+
+    alert(
+        "Expense deleted successfully!"
+    );
+
+}
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+function renderHistory() {
+
+    const list =
+        document.getElementById(
+            "historyList"
+        );
+
+
+    const keyword =
+        document.getElementById(
+            "search"
+        ).value
+        .trim()
+        .toLowerCase();
+
+
+    const category =
+        document.getElementById(
+            "filterCategory"
+        ).value;
+
+
+    const filtered =
+        expenses
+        .map(
+            (item, index) => ({
+                item,
+                index
+            })
+        )
+        .filter(
+            ({ item }) => {
+
+                const searchable =
+                    (
+                        item.description +
+                        " " +
+                        item.category +
+                        " " +
+                        item.payment
+                    ).toLowerCase();
+
+
+                const matchesSearch =
+                    !keyword ||
+                    searchable.includes(
+                        keyword
+                    );
+
+
+                const matchesCategory =
+                    category ===
+                    "All Categories" ||
+                    item.category ===
+                    category;
+
+
+                return (
+                    matchesSearch &&
+                    matchesCategory
+                );
+
+            }
+        )
+        .reverse();
+
+
+    if (
+        filtered.length === 0
+    ) {
+
+        list.innerHTML =
+            '<div class="empty">No matching expenses found.</div>';
+
+        return;
+
+    }
+
+
+    list.innerHTML =
+        filtered.map(
+            ({ item, index }) => {
+
+                return `
+
+                    <div class="expense-item">
+
+                        <div class="expense-top">
+
+                            <div>
+
+                                <div class="expense-description">
+
+                                    ${escapeHtml(
+                                        item.description
+                                    )}
+
+                                </div>
+
+
+                                <div class="expense-details">
+
+                                    ${escapeHtml(
+                                        item.date
+                                    )}
+
+                                    •
+
+                                    ${escapeHtml(
+                                        item.category
+                                    )}
+
+                                    •
+
+                                    ${escapeHtml(
+                                        item.payment
+                                    )}
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="expense-amount">
+
+                                ${formatMoney(
+                                    item.amount
+                                )}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="expense-actions">
+
+                            <button
+                                class="secondary small-button"
+                                onclick="editExpense(${index})"
+                            >
+                                Edit
+                            </button>
+
+
+                            <button
+                                class="danger small-button"
+                                onclick="deleteExpense(${index})"
+                            >
+                                Delete
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+/* =========================================================
+   ANALYSIS
+========================================================= */
+
+function renderAnalysis() {
+
+    const total =
+        calculateTotal();
+
+
+    const count =
+        expenses.length;
+
+
+    const average =
+        count > 0
+        ? total / count
+        : 0;
+
+
+    const largest =
+        expenses.length > 0
+        ? Math.max(
+            ...expenses.map(
+                item =>
+                    Number(
+                        item.amount
+                    )
+            )
+        )
+        : 0;
+
+
+    document.getElementById(
+        "analysisTotal"
+    ).textContent =
+        formatMoney(total);
+
+
+    document.getElementById(
+        "analysisAverage"
+    ).textContent =
+        formatMoney(average);
+
+
+    document.getElementById(
+        "analysisLargest"
+    ).textContent =
+        formatMoney(largest);
+
+
+    renderCategoryBreakdown();
+
+    renderInsights();
+
+}
+
+
+function renderCategoryBreakdown() {
+
+    const container =
+        document.getElementById(
+            "categoryBreakdown"
+        );
+
+
+    const totals =
+        getCategoryTotals();
+
+
+    const total =
+        calculateTotal();
+
+
+    if (
+        Object.keys(totals)
+            .length === 0
+    ) {
+
+        container.innerHTML =
+            '<div class="empty">Add expenses to see category analysis.</div>';
+
+        return;
+
+    }
+
+
+    const sorted =
+        Object.entries(totals)
+        .sort(
+            (a, b) =>
+                b[1] - a[1]
+        );
+
+
+    container.innerHTML =
+        sorted.map(
+            ([category, amount]) => {
+
+                const percentage =
+                    total > 0
+                    ? amount /
+                      total *
+                      100
+                    : 0;
+
+
+                return `
+
+                    <div class="category-row">
+
+                        <div class="category-line">
+
+                            <span>
+
+                                ${escapeHtml(
+                                    category
+                                )}
+
+                            </span>
+
+
+                            <strong>
+
+                                ${formatMoney(
+                                    amount
+                                )}
+
+                            </strong>
+
+                        </div>
+
+
+                        <div class="category-bar-bg">
+
+                            <div
+                                class="category-bar"
+                                style="
+                                    width:${percentage}%
+                                "
+                            ></div>
+
+                        </div>
+
+
+                        <div
+                            style="
+                                color:#7A8190;
+                                font-size:11px;
+                                margin-top:4px;
+                            "
+                        >
+
+                            ${percentage.toFixed(
+                                1
+                            )}%
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+function renderInsights() {
+
+    const container =
+        document.getElementById(
+            "insights"
+        );
+
+
+    if (
+        expenses.length === 0
+    ) {
+
+        container.innerHTML =
+            '<div class="empty">Add expenses to generate useful insights.</div>';
+
+        return;
+
+    }
+
+
+    const totals =
+        getCategoryTotals();
+
+
+    const highestCategory =
+        Object.entries(totals)
+        .sort(
+            (a, b) =>
+                b[1] - a[1]
+        )[0];
+
+
+    const total =
+        calculateTotal();
+
+
+    const highestAmount =
+        highestCategory[1];
+
+
+    const percentage =
+        highestAmount /
+        total *
+        100;
+
+
+    let html = `
+
+        <p>
+
+            • Your highest spending category is
+
+            <strong>
+
+                ${escapeHtml(
+                    highestCategory[0]
+                )}
+
+            </strong>.
+
+        </p>
+
+
+        <p style="margin-top:10px;">
+
+            • You spent
+
+            <strong>
+
+                ${formatMoney(
+                    highestAmount
+                )}
+
+            </strong>
+
+            on
+
+            ${escapeHtml(
+                highestCategory[0]
+            )}.
+
+        </p>
+
+
+        <p style="margin-top:10px;">
+
+            • That is
+
+            <strong>
+
+                ${percentage.toFixed(
+                    1
+                )}%
+
+            </strong>
+
+            of your total spending.
+
+        </p>
+
+
+        <p style="margin-top:10px;">
+
+            • You have recorded
+
+            <strong>
+
+                ${expenses.length}
+
+            </strong>
+
+            expense(s).
+
+        </p>
+
+    `;
+
+
+    if (budget > 0) {
+
+        const remaining =
+            budget - total;
+
+
+        if (
+            remaining < 0
+        ) {
+
+            html += `
+
+                <p
+                    class="over-budget"
+                    style="margin-top:10px;"
+                >
+
+                    • You are
+
+                    <strong>
+
+                        ${formatMoney(
+                            Math.abs(
+                                remaining
+                            )
+                        )}
+
+                    </strong>
+
+                    over your budget.
+
+                </p>
+
+            `;
+
+        } else {
+
+            html += `
+
+                <p
+                    class="within-budget"
+                    style="margin-top:10px;"
+                >
+
+                    • You have
+
+                    <strong>
+
+                        ${formatMoney(
+                            remaining
+                        )}
+
+                    </strong>
+
+                    remaining in your budget.
+
+                </p>
+
+            `;
+
+        }
+
+    }
+
+
+    container.innerHTML =
+        html;
+
+}
+
+
+/* =========================================================
+   BUDGET
+========================================================= */
+
+function saveBudget() {
+
+    const value =
+        parseFloat(
+            document.getElementById(
+                "budgetInput"
+            ).value
+        );
+
+
+    if (
+        Number.isNaN(value) ||
+        value < 0
+    ) {
+
+        alert(
+            "Budget cannot be negative."
+        );
+
+        return;
+
+    }
+
+
+    budget =
+        value;
+
+
+    saveData();
+
+
+    renderBudget();
+
+    renderDashboard();
+
+    renderAnalysis();
+
+
+    alert(
+        "Budget updated successfully!"
+    );
+
+}
+
+
+function renderBudget() {
+
+    document.getElementById(
+        "budgetInput"
+    ).value =
+        budget;
+
+
+    const total =
+        calculateTotal();
+
+
+    const remaining =
+        budget - total;
+
+
+    document.getElementById(
+        "summaryBudget"
+    ).textContent =
+        formatMoney(
+            budget
+        );
+
+
+    document.getElementById(
+        "summarySpent"
+    ).textContent =
+        formatMoney(
+            total
+        );
+
+
+    document.getElementById(
+        "summaryRemaining"
+    ).textContent =
+        formatMoney(
+            remaining
+        );
+
+
+    const progress =
+        document.getElementById(
+            "budgetProgress"
+        );
+
+
+    let percentage =
+        0;
+
+
+    if (budget > 0) {
+
+        percentage =
+            total /
+            budget *
+            100;
+
+
+        percentage =
+            Math.min(
+                Math.max(
+                    percentage,
+                    0
+                ),
+                100
+            );
+
+    }
+
+
+    progress.style.width =
+        percentage + "%";
+
+
+    const status =
+        document.getElementById(
+            "budgetStatus"
+        );
+
+
+    if (
+        budget === 0
+    ) {
+
+        status.textContent =
+            "Set a budget to start monitoring your spending.";
+
+        status.className =
+            "";
+
+    } else if (
+        remaining < 0
+    ) {
+
+        status.textContent =
+            "Over budget";
+
+        status.className =
+            "over-budget";
+
+    } else {
+
+        status.textContent =
+            "Within budget";
+
+        status.className =
+            "within-budget";
+
+    }
+
+}
+
+
+/* =========================================================
+   EXPORT REPORT
+========================================================= */
+
+function exportReport() {
+
+    if (
+        expenses.length === 0
+    ) {
+
+        alert(
+            "Add at least one expense before exporting a report."
+        );
+
+        return;
+
+    }
+
+
+    const total =
+        calculateTotal();
+
+
+    const remaining =
+        budget - total;
+
+
+    const totals =
+        getCategoryTotals();
+
+
+    let report = "";
+
+
+    report +=
+        "========================================\n";
+
+    report +=
+        "             SPENDWISE REPORT\n";
+
+    report +=
+        "========================================\n\n";
+
+
+    report +=
+        "SUMMARY\n";
+
+    report +=
+        "----------------------------------------\n";
+
+
+    report +=
+        `Total Expenses : ${expenses.length}\n`;
+
+
+    report +=
+        `Total Spent    : ${formatMoney(total)}\n`;
+
+
+    report +=
+        `Budget         : ${formatMoney(budget)}\n`;
+
+
+    report +=
+        `Remaining      : ${formatMoney(remaining)}\n\n`;
+
+
+    report +=
+        "CATEGORY BREAKDOWN\n";
+
+
+    report +=
+        "----------------------------------------\n";
+
+
+    Object.entries(totals)
+        .sort(
+            (a, b) =>
+                b[1] - a[1]
+        )
+        .forEach(
+            ([category, amount]) => {
+
+                const percentage =
+                    total > 0
+                    ? amount /
+                      total *
+                      100
+                    : 0;
+
+
+                report +=
+                    `${category}: ` +
+                    `${formatMoney(amount)} ` +
+                    `(${percentage.toFixed(1)}%)\n`;
+
+            }
+        );
+
+
+    report += "\n";
+
+
+    report +=
+        "EXPENSE HISTORY\n";
+
+
+    report +=
+        "========================================\n";
+
+
+    expenses.forEach(
+        (item, index) => {
+
+            report +=
+                `\n${index + 1}. ` +
+                `${item.description}\n`;
+
+
+            report +=
+                `   Amount   : ` +
+                `${formatMoney(
+                    item.amount
+                )}\n`;
+
+
+            report +=
+                `   Category : ` +
+                `${item.category}\n`;
+
+
+            report +=
+                `   Date     : ` +
+                `${item.date}\n`;
+
+
+            report +=
+                `   Payment  : ` +
+                `${item.payment}\n`;
+
+        }
+    );
+
+
+    report +=
+        "\n========================================\n";
+
+
+    report +=
+        "Generated by SpendWise\n";
+
+
+    report +=
+        "========================================\n";
+
+
+    const blob =
+        new Blob(
+            [report],
+            {
+                type:
+                    "text/plain;charset=utf-8"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(
+            blob
+        );
+
+
+    const link =
+        document.createElement(
+            "a"
+        );
+
+
+    link.href =
+        url;
+
+
+    link.download =
+        "SpendWise_Report.txt";
+
+
+    document.body.appendChild(
+        link
+    );
+
+
+    link.click();
+
+
+    document.body.removeChild(
+        link
+    );
+
+
+    URL.revokeObjectURL(
+        url
+    );
+
+
+    alert(
+        "Report exported successfully!"
+    );
+
+}
+
+
+/* =========================================================
+   TEXT SAFETY
+========================================================= */
+
+function escapeHtml(text) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        text;
+
+
+    return div.innerHTML;
+
+}
+
+
+/* =========================================================
+   SERVICE WORKER
+========================================================= */
+
+if (
+    "serviceWorker" in navigator
+) {
+
+    window.addEventListener(
+        "load",
+        () => {
+
+            navigator.serviceWorker
+                .register("./sw.js")
+                .then(
+                    () => {
+
+                        console.log(
+                            "SpendWise offline support enabled."
+                        );
+
+                    }
+                )
+                .catch(
+                    error => {
+
+                        console.error(
+                            "Service Worker registration failed:",
+                            error
+                        );
+
+                    }
+                );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+setToday();
+
+renderDashboard();
+
+renderHistory();
+
+renderAnalysis();
+
+renderBudget();
+
+</script>
+
+</body>
+</html>
